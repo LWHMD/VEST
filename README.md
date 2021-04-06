@@ -18,7 +18,8 @@ name: VASP Electronic Structure Tool(VEST)
                POSCAR, fermi.dat                         
                KPOINTS.DFT(HSE),                         
  run command: python3.4 vest.py                     
- Author     : Leiwang  updata 2021/04/06                                   
+ Author     : Leiwang  updata 2021/04/06  
+ 
 -----
 
 install
@@ -34,8 +35,13 @@ chmod +x vest.py
 2. To get the path of your python3
 
 ```Bash
-which python3 
+which python3               //Bash
+/share/pyenv/bin/python3    
 ```
 
 3. To change the path in the first line of vest.py.
+
+```Vim
+#!/share/pyenv/bin/python3  //vim
+```
 
