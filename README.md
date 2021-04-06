@@ -5,20 +5,26 @@ vest.py is a script to extract data from output file of VASP.
 
 How to use
 ----
-name: VASP Electronic Structure Tool(VEST)           
-                                                         
-- script to extract data from PROCAR 
- Input file : PROCAR                                     
-              KPOINTS,                                   
-              POSCAR                                     
-- script to extract data from EIGENVAL    
- VASP version: 5.4.4                                     
- Input file  : EIGENVAL,(soc,nosoc.megnetic)             
-               KPOINTS,                                  
-               POSCAR, fermi.dat                         
-               KPOINTS.DFT(HSE),                         
- run command: python3.4 vest.py                     
- Author     : Leiwang  updata 2021/04/06  
+```vim
+###########################################################
+#         name: VASP Electronic Structure Tool(VEST)      #     
+#                                                         #
+########### script to extract data from PROCAR ############
+# Input file : PROCAR                                     #
+#              KPOINTS,                                   #
+#              POSCAR                                     #
+########### script to extract data from EIGENVAL ##########
+# VASP version: 5.4.4                                     #
+# Input file  : EIGENVAL,(soc,nosoc.megnetic)             #
+#               KPOINTS,                                  #
+#               POSCAR, fermi.dat                         #
+#               KPOINTS.DFT(HSE),                         #
+-----------------------------------------------------------
+# run command: python3.4 VaspToolX.py                     #
+# Author     : Leiwang  updata 2021/04/06                 #
+##########################################################
+```
+
  
 -----
 
