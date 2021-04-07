@@ -209,7 +209,7 @@ def project_orbit():
 
 
     #print (LSO,mag,Lorbit)
-    efermi = fermienergy('fermi.dat')
+    efermi = fermienergy()
     efermi = float(efermi)
 
     lines2 = lines3[1]
@@ -293,7 +293,7 @@ def project_orbit():
     write2txt('high-symmetry-line.dat',str(0)+'\t'+str(0))
     write2txt('high-symmetry-line.dat',str(hsl[len(hsl)-1])+'\t'+str(hsl[0]))
 
-    project_orbit2()
+    #project_orbit2()
 
 
 def project_orbit2():
