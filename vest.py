@@ -108,19 +108,20 @@ def L_in_kspace(ary1,ary2,b):
 
 # To calculate k mesh
 def calcu_k_meth(lines0,lines1):  #POSCAR , KPOINTS
-    result = []   # to read KPOINTS
+    result = []                   # to read KPOINTS
     for line in lines1:                          
         line = line.strip()                          
         if not len(line) or line.startswith('#'):     
              continue                                  
         result.append(line)                            
-    mesh = int(result[1])
-    i = 4     # initial line
-    K_path = []         # to get k path
+    mesh = int(result[1])     #  second line of KPOINTS
+    i = 4                     # initial line
+    K_path = []               # to get k path
     while i < len(result):
-        K_path.append(result[i])
+        kpath=result[i].split()
+        K_path.append(kpath[0]+' '+kpath[1]+' '+kpath[2])
         i += 1
-
+    #print (result,len(result))
     # get mesh
     Nk_path = len(K_path)
     L_k_tem = 0.0
@@ -193,7 +194,7 @@ def project_orbit():
 
     # extract data in two mode soc or nosoc
     #mode = int(input('spd input 1; s px py pz dxy dyz dz2 dxz dx2 input 2:'))   # LORBIT
-    mode = 2
+    #mode = 2
     LSO = 1 
     mag = 1
     Lorbit = 10
