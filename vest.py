@@ -1,4 +1,4 @@
-#!/share/pyenv/bin/python3
+#!/public1/soft/anaconda/anaconda3/bin/python3
 
 
 
@@ -103,7 +103,7 @@ def L_in_kspace(ary1,ary2,b):
     dl = np.subtract(ary1,ary2)
     DL = np.dot(dl,b)
     # to get the mod of vector
-    kb1 = 1/(2*pi)*sqrt((DL[0])**2+(DL[1])**2+(DL[2])**2)
+    kb1 = sqrt((DL[0])**2+(DL[1])**2+(DL[2])**2)
     return kb1      #
 
 # To calculate k mesh
@@ -353,19 +353,21 @@ def project_orbit2():
 
 
     if Lorbit ==11:
-        orbit_file = read_data('band-spxdx-'+element[0]+'.dat')
+        orbit_file0 = read_data('band-spxdx-'+element[0]+'.dat')
     else:
-        orbit_file = read_data('band-spd-'+element[0]+'.dat')
-
+        orbit_file0 = read_data('band-spd-'+element[0]+'.dat')
     
-    comp=[0.0 for i in range(len(orbit_file))]      # component 
-    path = [0.0 for i in range(len(orbit_file))]    # path
-    energy= [0.0 for i in range(len(orbit_file))]   # energy
+    comp=[0.0 for i in range(len(orbit_file0))]      # component 
+    path = [0.0 for i in range(len(orbit_file0))]    # path
+    energy= [0.0 for i in range(len(orbit_file0))]   # energy
     N_el = 0   # number of element
     goin = 0   # flag to set write only one times
     #print (element)
     while N_el < len(element):
-        #orbit_file = read_data('band-spxdx-'+element[N_el]+'.dat')
+        if Lorbit ==11:
+            orbit_file = read_data('band-spxdx-'+element[N_el]+'.dat')
+        else:
+            orbit_file = read_data('band-spd-'+element[N_el]+'.dat')
         Lf = 0    # Length of file
         #print (N_el) 
         while Lf < len(orbit_file): 
