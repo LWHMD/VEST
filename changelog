@@ -1,0 +1,2 @@
+2021,05,06
+In option 5 （extract band range）,  when bandstructure.dat not in directory, now it can extract data from BAND.dat of vaspkit 211.  
