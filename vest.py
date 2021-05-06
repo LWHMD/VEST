@@ -17,8 +17,8 @@
 #               POSCAR, fermi.dat                         #
 #               KPOINTS.DFT(HSE),                         #
 -----------------------------------------------------------
-# run command: python3.4 VaspToolX.py                     #
-# Author     : Leiwang  updata 2021/04/01                 #
+# run command: python3 vest.py                            #
+# Author     : Leiwang  updata 2021/05/06                 #
 # Email      : leiwang526@gmail.com                       #
 ###########################################################
 # The version copy from ubuntu
@@ -28,6 +28,8 @@
 # E-fermi :   7.0717     XC(G=0): -11.2821     alpha+bet :-12.3742
 
 # creat it by : grep fermi OUTCAR > fermi.dat     # OUTCAR from static calculation
+
+# suggtion
 '''
 
 
@@ -704,9 +706,9 @@ def band_hse_cal():
 
 # used to calculate band structure
 def bandstructure():
-    conform_file = str(input('To ensure POSCAR, EIGENVAL, KPOINTS, fermi.dat in current floder: Y/N'))
+    conform_file = str(input('To ensure POSCAR, EIGENVAL, KPOINTS, DOSCAR in current floder: Y/N'))
     if  'Y' == conform_file :
-        print('please prepare POSCAR, EIGENVAL, KPOINTS ')
+        print('please prepare POSCAR, EIGENVAL, KPOINTS and DOSCAR (from static calculation) ')
         print('To choose the program that you want to use: ')
         print('1. normal band')
         print('2. HSE band')
