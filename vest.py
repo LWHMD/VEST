@@ -182,9 +182,9 @@ def read_incar(para):
 def project_orbit():
 
     while True:
-        conform_file = str(input('To ensure POSCAR, PROCAR, KPOINTS, fermi.dat in current floder: Y/N'))
+        conform_file = str(input('To ensure POSCAR, PROCAR, KPOINTS and DOSCAR in current floder: Y/N'))
         if  'Y' != conform_file :
-            print('please prepare POSCAR, PROCAR, KPOINTS ')
+            print('please prepare POSCAR, PROCAR, KPOINTS and DOSCAR (from static calculation)')
             continue
         else:
             break
