@@ -1,4 +1,4 @@
-#!/public1/soft/anaconda/anaconda3/bin/python3
+#!/share/pyenv/bin/python3
 
 
 
@@ -103,7 +103,7 @@ def L_in_kspace(ary1,ary2,b):
     dl = np.subtract(ary1,ary2)
     DL = np.dot(dl,b)
     # to get the mod of vector
-    kb1 = sqrt((DL[0])**2+(DL[1])**2+(DL[2])**2)
+    kb1 = 1/(2*pi)*sqrt((DL[0])**2+(DL[1])**2+(DL[2])**2)
     return kb1      #
 
 # To calculate k mesh
@@ -223,20 +223,33 @@ def project_orbit():
     L_k_mesh_list = calcu_k_meth(lines0,lines1)
     L_k_mesh_list=L_k_mesh_list[0]
 
-    if LSO ==1:
-        tb_betw=(ni+1)+4         # the number of line between two adjacent band in one k-block
+    #Num_A = []
+    Element=lines0[5].split()
+    Num_A=lines0[6].split()
+
+    total_El = 0
+    print (Num_A)
+    for i in range(len(Num_A)):
+        x=int(Num_A[i])
+        print(x)
+        total_El = total_El + x
+    print (total_El)
+    if total_El >1:
+        if LSO ==1:
+            tb_betw=(ni+1)+4         # the number of line between two adjacent band in one k-block
+        else:
+            tb_betw=(ni+1)*4+4
     else:
-        tb_betw=(ni+1)*4+4
+        if LSO ==1:
+            tb_betw=ni+4         # the number of line between two adjacent band in one k-block
+        else:
+            tb_betw=ni*4+4
+
 
     N_A = 0
     N_i = 0
-    Num_A = []
     #if element in lines0[5]:
-    Element=lines0[5].split()
     #print (Element)
-    Num_A=lines0[6].split()
-    #print (Element)
-    #print (Num_A)
     i = 0
     while i< len(Element):
         N_A = N_A + int(Num_A[i])
@@ -353,21 +366,19 @@ def project_orbit2():
 
 
     if Lorbit ==11:
-        orbit_file0 = read_data('band-spxdx-'+element[0]+'.dat')
+        orbit_file = read_data('band-spxdx-'+element[0]+'.dat')
     else:
-        orbit_file0 = read_data('band-spd-'+element[0]+'.dat')
+        orbit_file = read_data('band-spd-'+element[0]+'.dat')
+
     
-    comp=[0.0 for i in range(len(orbit_file0))]      # component 
-    path = [0.0 for i in range(len(orbit_file0))]    # path
-    energy= [0.0 for i in range(len(orbit_file0))]   # energy
+    comp=[0.0 for i in range(len(orbit_file))]      # component 
+    path = [0.0 for i in range(len(orbit_file))]    # path
+    energy= [0.0 for i in range(len(orbit_file))]   # energy
     N_el = 0   # number of element
     goin = 0   # flag to set write only one times
     #print (element)
     while N_el < len(element):
-        if Lorbit ==11:
-            orbit_file = read_data('band-spxdx-'+element[N_el]+'.dat')
-        else:
-            orbit_file = read_data('band-spd-'+element[N_el]+'.dat')
+        #orbit_file = read_data('band-spxdx-'+element[N_el]+'.dat')
         Lf = 0    # Length of file
         #print (N_el) 
         while Lf < len(orbit_file): 
@@ -841,11 +852,6 @@ def band_plot():
     #plt.savefig("fig.eps",format='eps', transparent=True, dpi=300)
 
 
-
-
-
-
-
 def get_b_k(bandfile):
     '''get the number of kpoints and bands from band file'''
     nband =[]
@@ -858,8 +864,23 @@ def get_b_k(bandfile):
     nb = (len(bandfile)+1)/(nk+1)
     return int(nb),int(nk)
 
+def range_of_band_vaspkit(nk,nb,filename):
+    '''get energy of single bands'''
+    #print (nb,nk)
+    bandfile = read_data(filename)
+    nbb = (nb-1)*(nk+2)+3
+    nbe = nb*(nk+2)+1
+    i=nbb
+    band=[]
+    while i < nbe:
+        energy = float(bandfile[i].split()[1])
+        band.append(energy)
+        i+=1
+    Emin = min(band)
+    Emax = max(band)
+    return Emin,Emax
 
-def range_of_band(nk,nb,filename):
+def range_of_band_vest(nk,nb,filename):
     '''get energy of single bands'''
     bandfile = read_data(filename)
     nbb = (nb-1)*(nk+1)
@@ -876,22 +897,51 @@ def range_of_band(nk,nb,filename):
 
 
 def range_of_all_bands():
+    #from pathlib import Path
+    import os.path
+    #os.path.isfile(fname)
     '''get energy range of all the bands from DFT bands '''
-    filename= 'bandstructure.dat'#str(input('input filename, eg. bandstructure.dat'))
-    DFTbandfile = read_data(filename)
-    nb,nk =get_b_k(DFTbandfile)
-    Efermi = fermienergy()
-    write2txt('bandrange.dat','      No.   Min     Max')
-    nb_list=[]
-    EMIN =[]
-    EMAX=[]
-    for i in range(0,int(nb),1):
-        Emin,Emax=range_of_band(nk,i+1,filename)
-        nb_list.append(i+1)
-        EMIN.append(Emin+Efermi)
-        EMAX.append(Emax+Efermi)
-        write2txt('bandrange.dat','Nband: %.f %.3f %.3f'%(i+1,Emin+Efermi,Emax+Efermi))
-    #return nb_list,EMIN,EMAX
+    band_path = os.getcwd()
+    #print(band_path)
+    vestbandname = 'bandstructure.dat'
+    vaspkitbandname = 'BAND.dat'
+    if os.path.isfile(vestbandname):
+        filename = 'bandstructure.dat'
+
+        DFTbandfile = read_data(filename)
+        nb,nk =get_b_k(DFTbandfile)
+        
+        
+        Efermi = fermienergy()
+        write2txt('bandrange.dat','      No.   Min     Max')
+        nb_list=[]
+        EMIN =[]
+        EMAX=[]
+        for i in range(0,int(nb)):
+            Emin,Emax=range_of_band_vest(nk,i+1,filename)
+            nb_list.append(i+1)
+            EMIN.append(Emin+Efermi)
+            EMAX.append(Emax+Efermi)
+            write2txt('bandrange.dat','Nband: %.f %.3f %.3f'%(i+1,Emin+Efermi,Emax+Efermi))
+    elif os.path.isfile(vaspkitbandname):
+        filename = 'BAND.dat'
+    
+        DFTbandfile = read_data(filename)
+        nk =int(DFTbandfile[1].split()[4])
+        nb =int(DFTbandfile[1].split()[5])
+        Efermi = fermienergy()
+        write2txt('bandrange.dat','      No.   Min     Max')
+        nb_list=[]
+        EMIN =[]
+        EMAX=[]
+        for i in range(0,int(nb)):
+            Emin,Emax=range_of_band_vaspkit(nk,i+1,filename)
+            nb_list.append(i+1)
+            EMIN.append(Emin+Efermi)
+            EMAX.append(Emax+Efermi)
+            write2txt('bandrange.dat','Nband: %.f %.3f %.3f'%(i+1,Emin+Efermi,Emax+Efermi))
+    else:
+        print('please extract band structure data from EIGENVAL by using option 3')
 
 
 
