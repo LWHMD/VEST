@@ -21,7 +21,7 @@ How to use
 #               KPOINTS.DFT(HSE),                         #
 -----------------------------------------------------------
 # run command: python3 vest.py                     #
-# Author     : Leiwang  updata 2021/04/06                 #
+# Author     : Leiwang  updata 2021/05/06                 #
 ##########################################################
 ```
 
