@@ -877,7 +877,7 @@ def range_of_band(nk,nb,filename):
 
 def range_of_all_bands():
     '''get energy range of all the bands from DFT bands '''
-    filename= 'BAND.dat'#str(input('input filename, eg. bandstructure.dat'))
+    filename= 'bandstructure.dat'#str(input('input filename, eg. bandstructure.dat'))
     DFTbandfile = read_data(filename)
     nb,nk =get_b_k(DFTbandfile)
     Efermi = fermienergy()
