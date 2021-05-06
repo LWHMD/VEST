@@ -20,7 +20,7 @@ How to use
 #               POSCAR, fermi.dat                         #
 #               KPOINTS.DFT(HSE),                         #
 -----------------------------------------------------------
-# run command: python3.4 VaspToolX.py                     #
+# run command: python3 vest.py                     #
 # Author     : Leiwang  updata 2021/04/06                 #
 ##########################################################
 ```
