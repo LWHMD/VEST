@@ -1,2 +1,7 @@
 2021,05,06
 In option 5 （extract band range）,  when bandstructure.dat not in directory, now it can extract data from BAND.dat of vaspkit 211.  
+
+2021,05,07
+1. fix the bug that cannot extract data from the PROCAR of one-atom syste.
+2. Add function to extract band range from the output file (BAND.dat) of vaspkit.
+3 Add function to extract band range from the output file (BAND.dat) of QE's bands.x module.
