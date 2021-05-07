@@ -7,18 +7,18 @@
 #    Code name: VASP Electronic Structure Tool(VEST)      #     
 #                                                         #
 ########### script to extract data from PROCAR ############
-# Input file : PROCAR, 278                                #
+# Input file : PROCAR,                                    #
 #              KPOINTS,                                   #
-#              POSCAR, fermi.dat                          #
+#              POSCAR, DOSCAR(from static calculation)    #
 ########### script to extract data from EIGENVAL ##########
 # VASP version: 5.4.4                                     #
 # Input file  : EIGENVAL,(soc,nosoc.megnetic)             #
 #               KPOINTS,                                  #
-#               POSCAR, fermi.dat                         #
+#               POSCAR, DOSCAR(from static calculation)   #
 #               KPOINTS.DFT(HSE),                         #
 -----------------------------------------------------------
 # run command: python3 vest.py                            #
-# Author     : Leiwang  updata 2021/05/06                 #
+# Author     : Leiwang  updata 2021/05/07                 #
 # Email      : leiwang526@gmail.com                       #
 ###########################################################
 # The version copy from ubuntu
@@ -28,8 +28,6 @@
 # E-fermi :   7.0717     XC(G=0): -11.2821     alpha+bet :-12.3742
 
 # creat it by : grep fermi OUTCAR > fermi.dat     # OUTCAR from static calculation
-
-# suggtion
 '''
 
 
@@ -182,9 +180,9 @@ def read_incar(para):
 def project_orbit():
 
     while True:
-        conform_file = str(input('To ensure POSCAR, PROCAR, KPOINTS and DOSCAR in current floder: Y/N'))
+        conform_file = str(input('To ensure POSCAR, PROCAR, KPOINTS, fermi.dat in current floder: Y/N'))
         if  'Y' != conform_file :
-            print('please prepare POSCAR, PROCAR, KPOINTS and DOSCAR (from static calculation)')
+            print('please prepare POSCAR, PROCAR, KPOINTS ')
             continue
         else:
             break
@@ -706,9 +704,9 @@ def band_hse_cal():
 
 # used to calculate band structure
 def bandstructure():
-    conform_file = str(input('To ensure POSCAR, EIGENVAL, KPOINTS, DOSCAR in current floder: Y/N'))
+    conform_file = str(input('To ensure POSCAR, EIGENVAL, KPOINTS, fermi.dat in current floder: Y/N'))
     if  'Y' == conform_file :
-        print('please prepare POSCAR, EIGENVAL, KPOINTS and DOSCAR (from static calculation) ')
+        print('please prepare POSCAR, EIGENVAL, KPOINTS ')
         print('To choose the program that you want to use: ')
         print('1. normal band')
         print('2. HSE band')
@@ -717,6 +715,56 @@ def bandstructure():
             band_cal()
         else:
             band_hse_cal()
+
+def QEbandstructure():
+    '''please use this function after performing bands.x.
+       And if your filband='graphene.band' in input of bands.x,
+       please use this function by python vest.py graphene.band'''
+    
+    import sys
+    filename = sys.argv[1] 
+    DFTbanddata=read_data(filename)
+    print (DFTbanddata[0])
+    nb = int(DFTbanddata[0].split()[2][:-1])
+    nk = int(DFTbanddata[0].split()[4])
+    len_block = round(nb/10)
+    if len_block*10 < nk:
+        len_block=len_block+1
+
+    #print(len_block)
+    energy = []
+    i=1
+    for point in range(0,nk):
+        e1=[]
+        for j in range(0,len_block):
+            energy_k=DFTbanddata[i+j+1].strip().split()
+            for w in energy_k:
+                e1.append(w)
+        energy.append(e1)
+        i=i+len_block+1
+    #print (np.array(energy).shape)
+    for i in range(nb):
+        for j in range(nk):
+            write2txt('band_qe.dat',str(j+1)+'\t'+str(energy[j][i]))    
+        write2txt('band_qe.dat','')
+    
+    filename = 'band_qe.dat'
+
+    DFTbandfile = read_data(filename)
+    
+    Efermi = 0  #fermienergy()
+    write2txt('bandrange.dat','      No.   Min     Max')
+    nb_list=[]
+    EMIN =[]
+    EMAX=[]
+    for i in range(0,int(nb)):
+        Emin,Emax=range_of_band_vest(nk,i+1,filename)
+        nb_list.append(i+1)
+        EMIN.append(Emin+Efermi)
+        EMAX.append(Emax+Efermi)
+        write2txt('bandrange.dat','Nband: %.f %.3f %.3f'%(i+1,Emin+Efermi,Emax+Efermi))
+
+    os.system('rm band_qe.dat')
 
 def band_kpoint_PROCAR():
     LSO = 1
@@ -906,6 +954,7 @@ def range_of_all_bands():
     band_path = os.getcwd()
     #print(band_path)
     vestbandname = 'bandstructure.dat'
+    qebandname='band_qe.dat'
     vaspkitbandname = 'BAND.dat'
     if os.path.isfile(vestbandname):
         filename = 'bandstructure.dat'
@@ -925,6 +974,28 @@ def range_of_all_bands():
             EMIN.append(Emin+Efermi)
             EMAX.append(Emax+Efermi)
             write2txt('bandrange.dat','Nband: %.f %.3f %.3f'%(i+1,Emin+Efermi,Emax+Efermi))
+ 
+    elif os.path.isfile(qebandname):
+        filename = 'band_qe.dat'
+
+        DFTbandfile = read_data(filename)
+        nb = int(DFTbandfile[0].split()[2][:-1])
+        nk = int(DFTbandfile[0].split()[4])
+        #nb,nk =get_b_k(DFTbandfile)
+        
+        #print(nb,nk) 
+        Efermi = 0  #fermienergy()
+        write2txt('bandrange.dat','      No.   Min     Max')
+        nb_list=[]
+        EMIN =[]
+        EMAX=[]
+        for i in range(0,int(nb)):
+            Emin,Emax=range_of_band_vest(nk,i+1,filename)
+            nb_list.append(i+1)
+            EMIN.append(Emin+Efermi)
+            EMAX.append(Emax+Efermi)
+            write2txt('bandrange.dat','Nband: %.f %.3f %.3f'%(i+1,Emin+Efermi,Emax+Efermi))
+    
     elif os.path.isfile(vaspkitbandname):
         filename = 'BAND.dat'
     
@@ -975,11 +1046,12 @@ while True:
     print('To choose the program that you want to use:')
     print('1. project orbit (step1)')
     print('2. project orbit (step2)')
-    print('3. band structure')
+    print('3. vasp band structure')
     print('4. the component of some bands at one k-point')
     print('5. wannier band range')
     print('6. wt.in wcc prepare')
-    print('7. quit')
+    print('7. QE band range')
+    print('8. quit')
     project = str(input())
     if  '1' == project :
         print('you are performing a project-orbit program now.')
@@ -995,5 +1067,7 @@ while True:
         range_of_all_bands()
     elif project == '6':
         wcc_output()
+    elif project == '7':
+        QEbandstructure()
     else:
         break
