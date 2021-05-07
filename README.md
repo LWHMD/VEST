@@ -54,9 +54,9 @@ which python3               //Bash
 
 Extract band range from QE after performing bands.x 
 ---
-    please use this function after performing bands.x.
-    And if your filband='graphene.band' in input of bands.x, please use this function by following command:
+please use this function after performing bands.x.
+And if your filband='graphene.band' in input of bands.x, please use this function by following command:
 
-   '''python
-   python vest.py graphene.band
-   '''
+'''python
+python vest.py graphene.band
+'''
