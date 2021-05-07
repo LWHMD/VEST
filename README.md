@@ -51,3 +51,11 @@ which python3               //Bash
 #!/share/pyenv/bin/python3  //vim
 ```
 
+
+Extract band range from QE after performing bands.x 
+---
+    please use this function after performing bands.x.
+    And if your filband='graphene.band' in input of bands.x, please use this function by following command:
+   '''python
+   python vest.py graphene.band
+   '''
