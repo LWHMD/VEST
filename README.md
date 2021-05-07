@@ -12,23 +12,23 @@ How to use
 ########### script to extract data from PROCAR ############
 # Input file : PROCAR                                     #
 #              KPOINTS                                    #
-#              POSCAR                                     #
+#              POSCAR, DOSCAR(from static calculation)    #
 ########### script to extract data from EIGENVAL ##########
 # VASP version: 5.4.4                                     #
 # Input file  : EIGENVAL,(soc,nosoc.megnetic)             #
 #               KPOINTS,                                  #
-#               POSCAR, fermi.dat                         #
+#               POSCAR, DOSCAR(from static calculation)   #
 #               KPOINTS.DFT(HSE),                         #
 -----------------------------------------------------------
-# run command: python3 vest.py                     #
-# Author     : Leiwang  updata 2021/05/06                 #
-##########################################################
+# run command: python3 vest.py                            #
+# Author     : Leiwang  updata 2021/05/07                 #
+###########################################################
 ```
 
  
 -----
 
-install
+Install
 ----
 1. Firstly, copy vest.py in your bin directory.
 
