@@ -103,7 +103,8 @@ def L_in_kspace(ary1,ary2,b):
     dl = np.subtract(ary1,ary2)
     DL = np.dot(dl,b)
     # to get the mod of vector
-    kb1 = 1/(2*pi)*sqrt((DL[0])**2+(DL[1])**2+(DL[2])**2)
+    #kb1 = 1/(2*pi)*sqrt((DL[0])**2+(DL[1])**2+(DL[2])**2)
+    kb1 = sqrt((DL[0])**2+(DL[1])**2+(DL[2])**2)
     return kb1      #
 
 # To calculate k mesh
